@@ -503,7 +503,7 @@ print(stepwise_model.summary())
 
 predictions = stepwise_model.predict(n_periods=30)
 future_dates = pd.date_range(start='28/08/2019', freq='D', periods=len(predictions))
-future_dates
+print('prediction for future date',future_dates)
 
 # =============================================================================
 # # Predictions of Stock prices for Next 30 days using SARIMA model
