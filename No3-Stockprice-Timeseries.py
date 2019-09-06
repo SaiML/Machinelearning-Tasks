@@ -160,7 +160,7 @@ actual = y_test['Close']
 mape = np.round(np.mean(abs_error/actual),3)
 resultsDf = pd.DataFrame({'Method':['Rregression on time'], 'MAPE': [mape], 'RMSE': [rmse]})
 resultsDf = resultsDf[['Method', 'RMSE', 'MAPE']]
-resultsDf
+print(resultsDf)
 
 # =============================================================================
 # # Method 2 : Naive Method
