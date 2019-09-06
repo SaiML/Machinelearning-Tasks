@@ -37,18 +37,18 @@ warnings.filterwarnings("ignore")
 #https://www.quandl.com/data/BSE/BOM500180-HDFC-Bank-Ltd-EOD-Prices
 
 df = pd.read_csv('BSE-BOM500180.csv', header=0)
-df.head()
-df.tail()
-df.dtypes
+print(df.head())
+print(df.tail())
+print(df.dtypes)
 
 df['Date']=pd.to_datetime(df['Date'])
 df=df.set_index('Date')
-df.head()
-df.describe().transpose()
+print(df.head())
+print(df.describe().transpose())
 
 df1=df[['Close']]
-df1.head()
-df1.tail()
+print(df1.head())
+print(df1.tail())
 
 # Hence it is daily data, but few stockprices values are missing for few Dates 
 # so , creating a index of continous dates and filling the missed values linearly, so that we can have all dates stock prices 
@@ -58,8 +58,8 @@ df2=df1.reindex(idx, fill_value=0)
 
 df2.replace(0,np.nan, inplace=True)
 dfnew=df2.interpolate(method='linear')
-dfnew.head()
-dfnew.tail()
+print(dfnew.head())
+print(dfnew.tail())
 
 # =============================================================================
 # # Checking Data Stationary :
