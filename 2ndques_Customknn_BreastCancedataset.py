@@ -26,8 +26,8 @@ warnings.filterwarnings('ignore')
 # =============================================================================
 
 df=pd.read_csv("breast-cancer-wisconsin.data", header=None)
-df.head()
-df.shape
+print(df.head())
+print('shape',df.shape)
 # =============================================================================
 # 
 #  We Do not have any information regarding the attributes of the dataset so tried to fetch the information 
@@ -62,13 +62,13 @@ df.shape
 
 df.columns = ['id','Clump_thickness','Uniformity_of_cellsize','uniformity_of_cellshape','Marginal_adhesion','Single_epithelain_cellsize',
         'Bare_nuclei','Bland_chromatin','Nornal_Nucleli','Mitoses','Class']
-df.head()
-df.info()
-df.describe().transpose()
+print(df.head())
+print(df.info())
+print(df.describe().transpose())
 
 #Checking for Null Values
-df.isnull().sum()
-df.nunique()
+print(df.isnull().sum())
+print(df.nunique())
 df.drop(['id'],axis=1,inplace=True)
 # Hence id is a unique value for all the customers visited for the cancer test, so removig the ID column for the dataset
 
@@ -209,7 +209,7 @@ start = time.time()
 knn = KNeighborsClassifier(n_neighbors =5)
 knn.fit(X_train1,y_train1)
 y_pred = knn.predict(X_test1)
-print('With KNN (K=5) test accuracy is: ',knn.score(X_test1,y_test1))
+print('With Sklearn KNN (K=5) test accuracy is: ',knn.score(X_test1,y_test1))
 
 end = time.time()
 time_taken = end - start
