@@ -50,7 +50,7 @@ print('Dtypes',df.dtypes)
 
 df['Date']=pd.to_datetime(df['Date'])
 df=df.set_index('Date')
-df.head()
+print(df.head())
 df.describe().transpose()
 
 df1=df[['Close']]
