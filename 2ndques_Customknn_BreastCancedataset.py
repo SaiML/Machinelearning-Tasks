@@ -21,13 +21,16 @@ import io
 import warnings
 warnings.filterwarnings('ignore')
 
+from functools import wraps
+from time import time
+import time
+
 # =============================================================================
 # Loading Dataset
 # =============================================================================
 
 df=pd.read_csv("breast-cancer-wisconsin.data", header=None)
-print(df.head())
-print('shape',df.shape)
+print(df.head(),'\n Shape of DataFrame is ',df.shape)
 # =============================================================================
 # 
 #  We Do not have any information regarding the attributes of the dataset so tried to fetch the information 
@@ -53,8 +56,6 @@ print('shape',df.shape)
 #    9. Normal Nucleoli               1 - 10
 #   10. Mitoses                       1 - 10
 #   11. Class:                        (2 for benign, 4 for malignant) 
-# 
-# =============================================================================
 
 # =============================================================================
 # # EDA
@@ -62,19 +63,14 @@ print('shape',df.shape)
 
 df.columns = ['id','Clump_thickness','Uniformity_of_cellsize','uniformity_of_cellshape','Marginal_adhesion','Single_epithelain_cellsize',
         'Bare_nuclei','Bland_chromatin','Nornal_Nucleli','Mitoses','Class']
-print(df.head())
-print(df.info())
-print(df.describe().transpose())
+print('head of DF',df.head(),'\n Info about DF',df.info(),'\n Description About DF',df.describe().transpose())
 
 #Checking for Null Values
-print(df.isnull().sum())
-print(df.nunique())
+
+print('Null values',df.isnull().sum(),'\n unique values',df.nunique())
 df.drop(['id'],axis=1,inplace=True)
+
 # Hence id is a unique value for all the customers visited for the cancer test, so removig the ID column for the dataset
-
-sns.pairplot(df,diag_kind='kde')
-plt.show
-
 # Checking for Missing Values
 
 for i in df:
@@ -87,13 +83,10 @@ df['Bare_nuclei'].value_counts()
 
 # there are 16 missing values replaced with ? , so replacing this ? with a constant 
 df.replace('?',-9999,inplace=True)
-df.head()
-df.shape
+print(df.head(),df.shape)
 plt.figure(figsize = (15,10))
 corr = df.corr()
 sns.heatmap(corr , annot =True)
-plt.show()
-
 
 # =============================================================================
 # #Splitting Data to Train and test data
@@ -125,7 +118,6 @@ class KNNClassifier(object):
 
     def __init__(self):
         pass
-    
     #"training" function
     def fit(self, X, y):
         self.X_train = X
@@ -140,7 +132,6 @@ class KNNClassifier(object):
             for j in range(k):
                 votesOneSample.append(distances[i][j][1])
             vote_results.append(Counter(votesOneSample).most_common(1)[0][0])
-        
         return vote_results
     
 #For each sample and every item in test set algorithm is making tuple in distance list
@@ -171,17 +162,11 @@ def run():
     y_pred = classifier.predict(X_test)
     print("My KNN accuracy: ",accuracy(y_test, y_pred),'%')
     
-from functools import wraps
-from time import time
-import time
-
-
 start = time.time()
 run()
 end = time.time()
 time_taken = end - start
 print('Time Taken : ',time_taken)
-
 
 # =============================================================================
 # #Checking Accuracy and Time with KNN - SKlearn
@@ -203,19 +188,17 @@ y=df['newclass']
 from sklearn.model_selection import train_test_split
 X_train1, X_test1, y_train1, y_test1 = train_test_split(X,y, test_size=0.3, random_state=0)
 
-from sklearn.neighbors import KNeighborsClassifier
 start = time.time()
-
 knn = KNeighborsClassifier(n_neighbors =5)
 knn.fit(X_train1,y_train1)
 y_pred = knn.predict(X_test1)
 print('With Sklearn KNN (K=5) test accuracy is: ',knn.score(X_test1,y_test1))
-
 end = time.time()
 time_taken = end - start
 print('Time: ',time_taken)
 
 # custom model is better at accuracy and lagging for time taking
+# checking Null Accuracy
 
 yy=pd.DataFrame(y_train)
 plt.rcParams['figure.figsize'] = (18, 7)
@@ -247,32 +230,16 @@ X_train_res, y_train_res = sm.fit_sample(X_train, y_train)
 
 print('After OverSampling, the shape of train_X: {}'.format(X_train_res.shape))
 print('After OverSampling, the shape of train_y: {} \n'.format(y_train_res.shape))
-
 print("After OverSampling, counts of label '2': {}".format(sum(y_train_res==2)))
 print("After OverSampling, counts of label '4': {}".format(sum(y_train_res==4)))
 
 
-yy1=pd.DataFrame(y_train_res)
-yy1.columns=['class']
-plt.rcParams['figure.figsize'] = (18, 7)
-plt.subplot(1, 2, 1)
-sns.countplot(yy1['class'], palette = 'pastel')
-plt.title('Training set : Benign or Malignant', fontsize = 30)
-plt.ylabel('count', fontsize = 15)
-plt.show()
 
 # Now Null Accuracy of the model is 50 % 
 
 # =============================================================================
 # # Custom KNN after Sampling
 # =============================================================================
-
-def run():
-    classifier = KNNClassifier()
-    classifier.fit(X_train_res, y_train_res)
-    y_pred1 = classifier.predict(X_test)
-    print("My KNN accuracy: ",accuracy(y_test, y_pred1),'%')
-    
 def run():
     classifier = KNNClassifier()
     classifier.fit(X_train_res, y_train_res)
@@ -352,7 +319,7 @@ for i, k in enumerate(neig):
     test_accuracy.append(knn.score(X_test1, y_test1))
 
 # Plot
-import matplotlib.pyplot as plt
+
 plt.figure(figsize=[13,8])
 plt.plot(neig, test_accuracy, label = 'Testing Accuracy')
 plt.legend()
@@ -375,6 +342,7 @@ print("KNN model confusion matrix = \n",mat_KNN)
 mat_KNN = classification_report(y_test1,y_pred)
 print("KNN model confusion matrix = \n",mat_KNN)
 
+# AUC CURVE
 
 from sklearn import metrics
 def draw_roc(actual,probs):
