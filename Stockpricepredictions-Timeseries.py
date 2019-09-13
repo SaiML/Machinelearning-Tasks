@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Sep  6 11:30:07 2019
-
-@author: Sainath.Reddy
-"""
-
-# -*- coding: utf-8 -*-
-"""
 Created on Thu Sep  5 11:48:11 2019
 
 @author: Sainath.Reddy
@@ -110,7 +103,6 @@ test=dfnew.loc['2019-02-27':'2019-08-27']
 train.Close.plot(figsize=(15,8), title= 'Close price', fontsize=14)
 test.Close.plot(figsize=(15,8), title= 'Close price train and test data', fontsize=14)
 plt.show()
-
 
 def plltt(train_data,test_data,y_test,model):
     plt.figure(figsize=(16,8))
