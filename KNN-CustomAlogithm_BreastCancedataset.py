@@ -8,7 +8,6 @@ Created on Wed Sep  4 16:28:16 2019
 # =============================================================================
 # Importing Libraries
 # =============================================================================
-
 import pandas as pd
 import numpy as np
 from math import sqrt
@@ -21,24 +20,24 @@ import io
 import warnings
 warnings.filterwarnings('ignore')
 
+from sklearn import metrics
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import classification_report,confusion_matrix
+from functools import wraps
+from time import time
+import time
 # =============================================================================
 # Loading Dataset
 # =============================================================================
-
 df=pd.read_csv("breast-cancer-wisconsin.data", header=None)
 print(df.head(),'\n Shape of DataFrame is ',df.shape)
+
 # =============================================================================
-# 
 #  We Do not have any information regarding the attributes of the dataset so tried to fetch the information 
 # from Machine learning Repository
 # Reference link: https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Original)
-# 
-# """ Relavant information Regarding Dataset 
-#   
+# """ Relavant information Regarding Dataset  
 #   Number of Attributes: 10 plus the class attribute
-#   
-#   Attribute Information: (class attribute has been moved to last column)
-# 
 #    #  Attribute                     Domain
 #    -- -----------------------------------------
 #    1. Sample code number            id number
@@ -52,11 +51,9 @@ print(df.head(),'\n Shape of DataFrame is ',df.shape)
 #    9. Normal Nucleoli               1 - 10
 #   10. Mitoses                       1 - 10
 #   11. Class:                        (2 for benign, 4 for malignant) 
-# 
-# =============================================================================
 
 # =============================================================================
-# # EDA
+# EDA
 # =============================================================================
 
 df.columns = ['id','Clump_thickness','Uniformity_of_cellsize','uniformity_of_cellshape','Marginal_adhesion','Single_epithelain_cellsize',
@@ -74,23 +71,15 @@ for i in df:
     print(x,i)
 
 # here in the Bare_nuclei Attribute we are having the missing data replaced with ?
-    
 df['Bare_nuclei'].value_counts()
 
 # there are 16 missing values replaced with ? , so replacing this ? with a constant 
 df.replace('?',-9999,inplace=True)
-df.head()
 print('new shape',df.shape)
-plt.figure(figsize = (15,10))
-corr = df.corr()
-sns.heatmap(corr , annot =True)
-plt.show()
-
 
 # =============================================================================
 # #Splitting Data to Train and test data
 # =============================================================================
-
 from collections import Counter
 df['Bare_nuclei']=df['Bare_nuclei'].astype(int)
 def split_train_valid_test(data,test_ratio): 
@@ -130,14 +119,12 @@ class KNNClassifier(object):
             for j in range(k):
                 votesOneSample.append(distances[i][j][1])
             vote_results.append(Counter(votesOneSample).most_common(1)[0][0])
-        
         return vote_results
     
-#For each sample and every item in test set algorithm is making tuple in distance list
-#this is how list looks =>> distances = [[[distance, class],[distance, class],[distance, class],[distance, class]]]
-#it will caluclate distances and sort them accordingly 
-
-    def compute_distances(self, X, X_test):
+    #For each sample and every item in test set algorithm is making tuple in distance list
+    #this is how list looks =>> distances = [[[distance, class],[distance, class],[distance, class],[distance, class]]]
+    #it will caluclate distances and sort them accordingly 
+     def compute_distances(self, X, X_test):
         distances = []
         for i in range(X_test.shape[0]):
             euclidian_distances = np.zeros(X.shape[0])
@@ -154,17 +141,12 @@ def accuracy(y_tes, y_pred):
         if(y_tes[i] == y_pred[i]):
             correct += 1
     return (correct/len(y_tes))*100
-
 def run():
     classifier = KNNClassifier()
     classifier.fit(X_train, y_train)
     y_pred = classifier.predict(X_test)
     print("My KNN accuracy: ",accuracy(y_test, y_pred),'%')
     
-from functools import wraps
-from time import time
-import time
-
 start = time.time()
 run()
 end = time.time()
@@ -174,7 +156,7 @@ print('Time Taken : ',time_taken)
 # =============================================================================
 # #Checking Accuracy and Time with KNN - SKlearn
 # =============================================================================
-from sklearn.neighbors import KNeighborsClassifier
+
 df['newclass']=np.nan
 for i in range(len(df['Class'])):
     if df['Class'].iloc[i] == 2:
@@ -191,9 +173,7 @@ y=df['newclass']
 from sklearn.model_selection import train_test_split
 X_train1, X_test1, y_train1, y_test1 = train_test_split(X,y, test_size=0.3, random_state=0)
 
-from sklearn.neighbors import KNeighborsClassifier
 start = time.time()
-
 knn = KNeighborsClassifier(n_neighbors =5)
 knn.fit(X_train1,y_train1)
 y_pred = knn.predict(X_test1)
@@ -220,13 +200,10 @@ Percent_value_counts = pd.DataFrame(data={
             }).sort_values('Count', ascending=False)
 Percent_value_counts
 # =============================================================================
-# 
 # # SMOTE MODEL for Balancing the data
-# 
 # =============================================================================
 
 from imblearn.over_sampling import SMOTE 
-
 print("Before OverSampling, counts of label '2': {}".format(sum(y_train==2)))
 print("Before OverSampling, counts of label '4': {} \n".format(sum(y_train==4)))
 
@@ -247,7 +224,6 @@ plt.ylabel('count', fontsize = 15)
 plt.show()
 
 # Now Null Accuracy of the model is 50 % 
-
 # =============================================================================
 # # Custom KNN after Sampling
 # =============================================================================
@@ -287,7 +263,6 @@ def run():
     print("\n 4.Specificity is :",Specificity)
     print("\n 5. F1score is :",F1score)
     
-    
 start = time.time()
 run()
 end = time.time()
@@ -297,11 +272,8 @@ print('Time Taken : ',time_taken)
 # =============================================================================
 # # SKlearn KNN ALGORITHM AFTER SAMPLING
 # =============================================================================
-
-
 print("Before OverSampling, counts of label '2' and newlabeled as 0: {}".format(sum(y_train1==0)))
 print("Before OverSampling, counts of label '4'  and newlabeled as 1: {} \n".format(sum(y_train1==1)))
-
 sm = SMOTE(random_state=2)
 X_train_res, y_train_res = sm.fit_sample(X_train1, y_train1)
 print('After OverSampling, the shape of train_X: {}'.format(X_train_res.shape))
@@ -309,10 +281,7 @@ print('After OverSampling, the shape of train_y: {} \n'.format(y_train_res.shape
 print("After OverSampling, counts of label '0': {}".format(sum(y_train_res==0)))
 print("After OverSampling, counts of label '1': {}".format(sum(y_train_res==1)))
 
-
 start = time.time()
-
-from sklearn.neighbors import KNeighborsClassifier
 knn = KNeighborsClassifier(n_neighbors =5)
 knn.fit(X_train_res, y_train_res)
 y_pred = knn.predict(X_test1)
@@ -350,16 +319,11 @@ print("Best accuracy is {} with K = {}".format(np.max(test_accuracy),1+test_accu
 # So ,for Testing data K value is 4 and Best Accuracy is 97.61
 
 # Model Metrics
-from sklearn.metrics import classification_report,confusion_matrix
 mat_KNN = confusion_matrix(y_test1,y_pred)
 print("KNN model confusion matrix = \n",mat_KNN)
-
-
 mat_KNN = classification_report(y_test1,y_pred)
 print("KNN model confusion matrix = \n",mat_KNN)
 
-
-from sklearn import metrics
 def draw_roc(actual,probs):
     fpr,tpr,thresholds = metrics.roc_curve(actual,probs)
     auc_score=metrics.roc_auc_score(actual,probs)
@@ -384,7 +348,6 @@ y_pred_prob = knn.predict_proba(X_test1)[:, 1]
 y_pred_prob[1:20]
 
 # histogram of predicted probabilities
-
 plt.hist(y_pred_prob, bins=20)
 
 # x-axis limit from 0 to 1
@@ -392,7 +355,6 @@ plt.xlim(0,1)
 plt.title('Histogram of predicted probabilities for class 1')
 plt.xlabel('Predicted probability of Cancer Class')
 plt.ylabel('Frequency')
-
 
 ## Changing the cut off value for prediction
 pred_proba_df = pd.DataFrame(knn.predict_proba(X_test1))
