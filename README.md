@@ -22,14 +22,23 @@ Time Series Forecasting finds a lot of applications in many branches of industry
 
 Before moving to sophisticated time series models Analysis here are the models used in Predictions
 1. regression_on_time
+
 2.Naive method
+
 3.Simple Average Method
+
 4.Moving Average Method
+
 5.Simple exponential smoothing
+
 6.holts method
+
 7.Holts winter method - Additive
+
 8.Holts winter method - Mutltiplicative
+
 9. Auto Regression MOdel
+
 10. ARIMA 
 
 
