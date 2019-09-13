@@ -4,7 +4,6 @@ Created on Fri Sep 13 14:51:28 2019
 
 @author: Sainath.Reddy
 """
-
 import pandas as pd 
 import numpy as np 
 from pandas import Series
@@ -41,7 +40,6 @@ df['Ratio_0f_Discussions'] = df['comments']/df['views']
 df[['title', 'main_speaker','views', 'comments', 'Ratio_0f_Discussions', 'film_date']].sort_values('Ratio_0f_Discussions', ascending=False).head(1)
     
 # The case for same-sex marriage is most Disscused TED show
-
 
 # =============================================================================
 # B
