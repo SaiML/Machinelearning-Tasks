@@ -68,11 +68,7 @@ print('Null values',df.isnull().sum(),'\n unique values',df.nunique())
 df.drop(['id'],axis=1,inplace=True)
 # Hence id is a unique value for all the customers visited for the cancer test, so removig the ID column for the dataset
 
-sns.pairplot(df,diag_kind='kde')
-plt.show
-
 # Checking for Missing Values
-
 for i in df:
     x=df[i].unique()
     print(x,i)
@@ -116,9 +112,7 @@ y_train=np.array(train_set['Class'])
 X_test=np.array(test_set.drop(['Class'],axis =1))
 y_test=np.array(test_set['Class'])
 
-
 class KNNClassifier(object):
-
     def __init__(self):
         pass
     
@@ -171,13 +165,11 @@ from functools import wraps
 from time import time
 import time
 
-
 start = time.time()
 run()
 end = time.time()
 time_taken = end - start
 print('Time Taken : ',time_taken)
-
 
 # =============================================================================
 # #Checking Accuracy and Time with KNN - SKlearn
@@ -240,13 +232,10 @@ print("Before OverSampling, counts of label '4': {} \n".format(sum(y_train==4)))
 
 sm = SMOTE(random_state=2)
 X_train_res, y_train_res = sm.fit_sample(X_train, y_train)
-
 print('After OverSampling, the shape of train_X: {}'.format(X_train_res.shape))
 print('After OverSampling, the shape of train_y: {} \n'.format(y_train_res.shape))
-
 print("After OverSampling, counts of label '2': {}".format(sum(y_train_res==2)))
 print("After OverSampling, counts of label '4': {}".format(sum(y_train_res==4)))
-
 
 yy1=pd.DataFrame(y_train_res)
 yy1.columns=['class']
@@ -315,10 +304,8 @@ print("Before OverSampling, counts of label '4'  and newlabeled as 1: {} \n".for
 
 sm = SMOTE(random_state=2)
 X_train_res, y_train_res = sm.fit_sample(X_train1, y_train1)
-
 print('After OverSampling, the shape of train_X: {}'.format(X_train_res.shape))
 print('After OverSampling, the shape of train_y: {} \n'.format(y_train_res.shape))
-
 print("After OverSampling, counts of label '0': {}".format(sum(y_train_res==0)))
 print("After OverSampling, counts of label '1': {}".format(sum(y_train_res==1)))
 
