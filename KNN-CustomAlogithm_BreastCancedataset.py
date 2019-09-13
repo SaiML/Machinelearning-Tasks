@@ -17,15 +17,15 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import random
 import io
-import warnings
-warnings.filterwarnings('ignore')
-
 from sklearn import metrics
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report,confusion_matrix
 from functools import wraps
 from time import time
 import time
+import warnings
+warnings.filterwarnings('ignore')
+
 # =============================================================================
 # Loading Dataset
 # =============================================================================
@@ -337,16 +337,13 @@ def draw_roc(actual,probs):
     plt.title('ROC CURVE')
     plt.legend(loc="lower right")
     plt.show()
-    
     return fpr,tpr,thresholds
-
 draw_roc(y_test1,y_pred)
 
 #Changing the Threshold for Probablities
 
 y_pred_prob = knn.predict_proba(X_test1)[:, 1]
 y_pred_prob[1:20]
-
 # histogram of predicted probabilities
 plt.hist(y_pred_prob, bins=20)
 
