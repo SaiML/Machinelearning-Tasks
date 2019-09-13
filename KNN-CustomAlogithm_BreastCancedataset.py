@@ -130,7 +130,7 @@ class KNNClassifier(object):
             euclidian_distances = np.zeros(X.shape[0])
             oneSampleList = []
             for j in range(len(X)):
-                euclidian_distances[j] = np.sqrt(np.sum(np.square(np.array(X_test[i]) - np.array(X[j]))))
+                euclidian_distances[j] = np.linalg.norm(np.array(X_test[i])-np.array(X[j])) 
                 oneSampleList.append([euclidian_distances[j], self.y_train[j]])
             distances.append(sorted(oneSampleList))
         return distances
