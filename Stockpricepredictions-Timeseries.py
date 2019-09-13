@@ -264,34 +264,21 @@ def visualdecompeseddata(x):
    
     lag_acf = acf(x, nlags=15)
     lag_pacf = pacf(x, nlags=20, method='ols')
-    
     plt.subplot(121) 
     plt.plot(lag_acf)
     plt.axhline(y=0,linestyle='--',color='gray')
     plt.axhline(y=-1.96/np.sqrt(len(x)),linestyle='--',color='gray')
     plt.axhline(y=1.96/np.sqrt(len(x)),linestyle='--',color='gray')
-    plt.title('Autocorrelation Function')
-    
-    plt.subplot(122)
     plt.plot(lag_pacf)
-    plt.axhline(y=0,linestyle='--',color='gray')
-    plt.axhline(y=-1.96/np.sqrt(len(x)),linestyle='--',color='gray')
-    plt.axhline(y=1.96/np.sqrt(len(x)),linestyle='--',color='gray')
-    plt.title('Partial Autocorrelation Function')
-    plt.tight_layout()
-    
+    plt.title('Autocorrelation Function')
     plt.figure(figsize=(16,8))
     pd.plotting.autocorrelation_plot(dfnew['Close_log_diff'])
-    
     decomp= sm.tsa.seasonal_decompose(x,freq=365)
     decomp.plot()
-    
 visualdecompeseddata(dfnew['Close_log_diff']) 
 
 dfnew.dropna(inplace=True)
 dfnew.head()
-
-
 # =============================================================================
 # Autoregression (AR) Method
 # =============================================================================
@@ -307,7 +294,6 @@ predictions = model_fit.predict(start=len(train), end=len(train)+len(test)-1, dy
 plltt(train['Close_log_diff'],test['Close_log_diff'],predictions,'Auto Regression model')
 newall(test['Close_log_diff'],predictions,'AR model')
 
-
 # =============================================================================
 # ARIMA
 # =============================================================================
@@ -316,7 +302,7 @@ p=d=q=range(0,5)
 import itertools
 val = list(itertools.product(p,d,q))
 
-print("Combinations of p,d,p for ARIMA")
+print("Combinations of p,d,p for ARIMA to get low AIC ")
 for param in val:
     try:
         model_arima = ARIMA(test['Close_log_diff'],order = param)
