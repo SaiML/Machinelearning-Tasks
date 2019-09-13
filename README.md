@@ -1,5 +1,4 @@
-# Machinelearning-Tasks
-Self learning tasks and assignments
+# Machinelearning- Assignments 
 
 Assignments solved and has been commited in respective branches
 
