@@ -21,6 +21,7 @@ Standard Libraries,Pandas,Numpy,Matplotlib,Seaborn,Sklearn
 Time Series Forecasting finds a lot of applications in many branches of industry or business. It allows to predict product demand (thus optimizing production and warehouse storage), forecast amount of money from sales (adjusting company’s expenses) or to predict future values of stock prices.
 
 Before moving to sophisticated time series models Analysis here are the models used in Predictions
+
 1. regression_on_time
 
 2.Naive method
