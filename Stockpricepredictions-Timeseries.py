@@ -52,7 +52,7 @@ def test_statinoray(timeseries):
     dftest = adfuller(timeseries['Close'])
     dfoutput=pd.Series(dftest[0:4],index=['Test statisctic','p-value','#lags used','number of observations used'])
     for key,value in dftest[4].items():
-        dfoutput['critical value (%s)' %key] =value
+        dfoutput[f"critical value {key}"] =value
     print(dfoutput)
 
 test_statinoray(timeseries_dfnew)
@@ -229,8 +229,8 @@ test=timeseries_dfnew[['Close_log_diff']].loc['2019-02-27':'2019-08-27']
 
 model = AR(train)
 model_fit = model.fit()
-print('Lag: %s' % model_fit.k_ar)
-print('Coefficients: %s' % model_fit.params)
+f"Lag: {model_fit.k_ar}"
+f"Coefficients: {model_fit.params}"
 predictions = model_fit.predict(start=len(train), end=len(train)+len(test)-1, dynamic=False)
 plltt(train['Close_log_diff'],test['Close_log_diff'],predictions,'Auto Regression model')
 newall(test['Close_log_diff'],predictions,'AR model')
