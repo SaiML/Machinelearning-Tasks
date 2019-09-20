@@ -66,7 +66,7 @@ class KNNClassifier():
             euclidian_distances = np.zeros(X.shape[0])
             oneSampleList = []
             for j in range(len(X)):
-                euclidian_distances[j] = np.sqrt(np.sum(np.square(np.array(X_test[i]) - np.array(X[j]))))
+                euclidian_distances[j] = np.linalg.norm(np.array(X_test[i])-np.array(X[j])) 
                 oneSampleList.append([euclidian_distances[j], self.y_train[j]])
             distances.append(sorted(oneSampleList))
         return distances
@@ -82,7 +82,7 @@ def run():
     classifier = KNNClassifier()
     classifier.fit(X_train, y_train)
     y_pred = classifier.predict(X_test)
-    print("My KNN accuracy: ",accuracy(y_test, y_pred),'%')
+    print(f"My KNN accuracy: {accuracy(y_test, y_pred)}")
     y_actu = pd.Series(y_test, name='Actual')
     y_pred = pd.Series(y_pred, name='Predicted')
     df_confusion = pd.crosstab(y_actu, y_pred, rownames=['Actual'], colnames=['Predicted'], margins=True)
@@ -103,7 +103,7 @@ start = time.time()
 run()
 end = time.time()
 time_taken = end - start
-print('Time Taken for Custom KNN: ',time_taken)
+print(f"Time Taken for Custom KNN: {time_taken}")
 
 
 # =============================================================================
@@ -129,11 +129,11 @@ start = time.time()
 knn = KNeighborsClassifier(n_neighbors =5)
 knn.fit(X_train1,y_train1)
 y_pred = knn.predict(X_test1)
-print('With SKlEARN KNN (K=5) test accuracy is: ',knn.score(X_test1,y_test1))
+print(f"With SKlEARN KNN (K=5) test accuracy is {knn.score(X_test1,y_test1)}")
 
 end = time.time()
 time_taken = end - start
-print('Time taken for SK learn: ',time_taken)
+print(f"Time taken for SK learn: {time_taken}")
 
 # custom model is better at accuracy and lagging for time taking
 
@@ -144,8 +144,8 @@ print('Time taken for SK learn: ',time_taken)
 sm = SMOTE(random_state=2)
 X_train_res, y_train_res = sm.fit_sample(X_train, y_train)
 
-print("After OverSampling, counts of label '2': {}".format(sum(y_train_res==2)))
-print("After OverSampling, counts of label '4': {}".format(sum(y_train_res==4)))
+print(f"After OverSampling, counts of label '2': {sum(y_train_res==2)}")
+print(f"After OverSampling, counts of label '4': {sum(y_train_res==4)}")
 
 # =============================================================================
 # Custom KNN after Sampling
@@ -155,16 +155,16 @@ def run():
     classifier = KNNClassifier()
     classifier.fit(X_train_res, y_train_res)
     y_pred1 = classifier.predict(X_test)
-    print("My KNN accuracy after smapling : ",accuracy(y_test, y_pred1),'%')
+    print(f"My KNN accuracy after smapling : {accuracy(y_test, y_pred1)}")
 
 run()
 
 # Model Metrics
 mat_KNN = confusion_matrix(y_test1,y_pred)
-print("KNN model confusion matrix = \n",mat_KNN)
+print(f"KNN model confusion matrix :{mat_KNN}")
 
 mat_KNN1 = classification_report(y_test1,y_pred)
-print("KNN model confusion matrix = \n",mat_KNN1)
+print(f"KNN model confusion matrix : {mat_KNN1}")
 
 def draw_roc(actual,probs):
     fpr,tpr,thresholds = metrics.roc_curve(actual,probs)
