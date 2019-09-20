@@ -206,7 +206,7 @@ for i in threshold_list:
     y_test_pred = pred_proba_df.applymap(lambda x: 1 if x>i else 0)
     test_accuracy = metrics.accuracy_score(y_test1.as_matrix().reshape(y_test1.as_matrix().size,1),
                                            y_test_pred.iloc[:,1].as_matrix().reshape(y_test_pred.iloc[:,1].as_matrix().size,1))
-    print('Model testing accuracy is {:.2f}'.format(test_accuracy))
+    print(f"Model testing accuracy is {test_accuracy:.2f}")
 
     print(confusion_matrix(y_test1.as_matrix().reshape(y_test1.as_matrix().size,1),
                            y_test_pred.iloc[:,1].as_matrix().reshape(y_test_pred.iloc[:,1].as_matrix().size,1)))
