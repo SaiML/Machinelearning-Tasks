@@ -12,7 +12,6 @@ import random,time,warnings
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from imblearn.over_sampling import SMOTE 
-from sklearn.metrics import classification_report,confusion_matrix
 from sklearn import metrics
 warnings.filterwarnings('ignore')
 
@@ -159,10 +158,10 @@ def run():
 run()
 
 # Model Metrics
-mat_KNN = confusion_matrix(y_test1,y_pred)
+mat_KNN = metrics.confusion_matrix(y_test1,y_pred)
 print(f"KNN model confusion matrix :{mat_KNN}")
 
-mat_KNN1 = classification_report(y_test1,y_pred)
+mat_KNN1 = metrics.classification_report(y_test1,y_pred)
 print(f"KNN model confusion matrix : {mat_KNN1}")
 
 def draw_roc(actual,probs):
