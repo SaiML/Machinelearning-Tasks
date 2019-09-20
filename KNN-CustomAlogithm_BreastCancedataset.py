@@ -7,7 +7,6 @@ Created on Wed Sep  4 16:28:16 2019
 
 import pandas as pd
 import numpy as np
-from collections import Counter
 import matplotlib.pyplot as plt
 import random,time,warnings
 from sklearn.model_selection import train_test_split
