@@ -17,7 +17,7 @@ from sklearn import metrics
 warnings.filterwarnings('ignore')
 
 
-Data_cancer =pd.read_csv("breast-cancer-wisconsin.data", header=None)
+Data_cancer = pd.read_csv("breast-cancer-wisconsin.data", header=None)
 Data_cancer.columns = ['id','Clump_thickness','Uniformity_of_cellsize','uniformity_of_cellshape','Marginal_adhesion','Single_epithelain_cellsize',
                        'Bare_nuclei','Bland_chromatin','Nornal_Nucleli','Mitoses','Class']
 Data_cancer.drop(['id'],axis=1,inplace=True)
@@ -128,11 +128,11 @@ start = time.time()
 knn = KNeighborsClassifier(n_neighbors =5)
 knn.fit(X_train1,y_train1)
 y_pred = knn.predict(X_test1)
-print(f"With SKlEARN KNN (K=5) test accuracy is {knn.score(X_test1,y_test1)}")
+print(f"With SKlEARN KNN (K=5) test accuracy is {knn.score(X_test1,y_test1):.2f}")
 
 end = time.time()
 time_taken = end - start
-print(f"Time taken for SK learn: {time_taken}")
+print(f"Time taken for SK learn: {time_taken}:.2f")
 
 # custom model is better at accuracy and lagging for time taking
 
@@ -154,7 +154,7 @@ def run():
     classifier = KNNClassifier()
     classifier.fit(X_train_res, y_train_res)
     y_pred1 = classifier.predict(X_test)
-    print(f"My KNN accuracy after smapling : {accuracy(y_test, y_pred1)}")
+    print(f"My KNN accuracy after smapling : {accuracy(y_test, y_pred1):.2f}")
 
 run()
 
