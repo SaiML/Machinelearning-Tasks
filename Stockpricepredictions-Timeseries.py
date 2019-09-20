@@ -13,7 +13,7 @@ from sklearn.metrics import mean_squared_error
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 from statsmodels.tsa.arima_model import ARIMA
 from statsmodels.tsa.api import SimpleExpSmoothing,ExponentialSmoothing
-from statsmodels.tsa.stattools import acf, pacf,import adfuller
+from statsmodels.tsa.stattools import acf, pacf,adfuller
 from pmdarima.arima import auto_arima
 import statsmodels.api as sm
 from math import sqrt
