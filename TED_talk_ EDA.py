@@ -71,9 +71,9 @@ def yearanalysis(x,Data):
     plt.show()
 
     # Finiding Delay in delay time and published year
-    df1=Data[['film_date','published_date']].head()
-    df1['delay'] = Data['published_date']-Data['film_date']
-    return df1.head()
+    df_delay =Data[['film_date','published_date']].head()
+    df_delay['delay'] = Data['published_date']-Data['film_date']
+    return df_delay.head()
 
 yearanalysis(published_date_year,TED_df)
 
@@ -104,7 +104,6 @@ TED_df["Total_Votes"]=TED_df["ratings"].apply(lambda x:total_count(x))
         
 for i in range(14):
     TED_df[Categories[i]]=TED_df["ratings"].apply(lambda x:Percent_count_of(i,x))/TED_df["Total_Votes"]
-    
 print(TED_df.head(2))
 
 
@@ -113,7 +112,6 @@ print(TED_df[TED_df["Inspiring"]==TED_df["Inspiring"].max()])
 
 # best funny show is Julia Sweeney: It's time for "The Talk"
 TED_df[TED_df["Funny"]==TED_df["Funny"].max()]
-
 
 # best informative show is Ramanan Laxminarayan: The coming crisis in ant
 TED_df[TED_df["Informative"]==TED_df["Informative"].max()]
@@ -132,27 +130,27 @@ df_negative['Perecent_negative'] =z
 df_negative.head()
 
 # f(ii)
-df1=TED_df[['name','Total_Votes','published_date']]
+df_averagevotes=TED_df[['name','Total_Votes','published_date']]
 date = datetime.date(2019,1,1)
-df1['datetime'] = pd.to_datetime(date)
-df1['noofdays'] = (df1['datetime']- df1['published_date']).dt.days
-df1['Avergae_no_votes']=df1['Total_Votes']/df1['noofdays']
-print(df1.head())
+df_averagevotes['datetime'] = pd.to_datetime(date)
+df_averagevotes['noofdays'] = (df_averagevotes['datetime']- df_averagevotes['published_date']).dt.days
+df_averagevotes['Avergae_no_votes']=df_averagevotes['Total_Votes']/df_averagevotes['noofdays']
+print(df_averagevotes.head())
 
 # g
 
-df2 = TED_df[['title', 'main_speaker', 'views','speaker_occupation','Funny']].sort_values('Funny', ascending=False)[:5]
-print(df2.head())
+df2_funny= TED_df[['title', 'main_speaker', 'views','speaker_occupation','Funny']].sort_values('Funny', ascending=False)[:5]
+print(df2_funny.head())
 
 # most funny comedy show is by Speaker Ken Robinson and belongs to occupation Author/educator
 
 #g(i)
 
-df3=TED_df[['name','Inspiring', 'Informative','Fascinating', 'Persuasive', 'Beautiful', 'Courageous', 'Funny',
+df3_recentrating =TED_df[['name','Inspiring', 'Informative','Fascinating', 'Persuasive', 'Beautiful', 'Courageous', 'Funny',
        'Ingenious', 'Jaw-dropping', 'OK', 'Unconvincing', 'Longwinded',
        'Obnoxious', 'Confusing' ]]
 
-df3['recent_rate']=  df3[df3.columns.difference(['name'])].idxmax(axis=1)
+df3_recentrating['recent_rate']=  df3_recentrating[df3_recentrating.columns.difference(['name'])].idxmax(axis=1)
 print(df3.head())
 
 # g(ii)
