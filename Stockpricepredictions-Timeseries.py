@@ -32,7 +32,7 @@ timeseries_df=Data_stocks[['Close']]
 idx = pd.date_range( '2014-08-27','2019-08-27')
 timeseries_df1=timeseries_df.reindex(idx, fill_value=0)
 timeseries_df1.replace(0,np.nan, inplace=True)
-timeseries_dfnew=timeseries_df1.interpolate(method='linear')
+timeseries_dfnew= timeseries_df1.interpolate(method='linear')
 
 # Checking Data Stationary :
 def test_statinoray(timeseries):
@@ -60,7 +60,6 @@ test_statinoray(timeseries_dfnew)
 # Checking Seasonality and Trend
 decomp= sm.tsa.seasonal_decompose(timeseries_dfnew,freq=365)
 decomp.plot()
-
 
 #  Train and Test data Split and Functions for Plotting Graphs and Metrics
 train=timeseries_dfnew.loc['2014-08-27':'2019-02-26']
@@ -229,8 +228,8 @@ test=timeseries_dfnew[['Close_log_diff']].loc['2019-02-27':'2019-08-27']
 
 model = AR(train)
 model_fit = model.fit()
-f"Lag: {model_fit.k_ar}"
-f"Coefficients: {model_fit.params}"
+print(f"Lag: {model_fit.k_ar}")
+print(f"Coefficients: {model_fit.params}")
 predictions = model_fit.predict(start=len(train), end=len(train)+len(test)-1, dynamic=False)
 plltt(train['Close_log_diff'],test['Close_log_diff'],predictions,'Auto Regression model')
 newall(test['Close_log_diff'],predictions,'AR model')
