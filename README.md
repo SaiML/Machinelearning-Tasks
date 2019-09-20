@@ -8,7 +8,7 @@ Timeseries - It has predictions of next 30 days of HDFC stock prices , using 5 y
 
 Ted- Is consists of EDA for the TED talk show
 
-# Custom KNN  Algorithm:
+# KNN :
 K Nearest Neighbours is one of the most commonly implemented Machine Learning classification algorithms. 
 The kNN is more widely used in classification problems than for regression problems, although it can be applied for both classification and regression problems.
 
