@@ -25,9 +25,7 @@ Data_cancer.drop(['id'],axis=1,inplace=True)
 Data_cancer.replace('?',-9999,inplace=True)
 Data_cancer['Bare_nuclei']=Data_cancer['Bare_nuclei'].astype(int)
 
-# =============================================================================
 # #Splitting Data to Train and test data
-# =============================================================================
 
 def split_train_valid_test(data,test_ratio): 
     shuffled_indcies=np.random.permutation(len(data)) 
@@ -43,7 +41,7 @@ X_test=np.array(test_set.drop(['Class'],axis =1))
 y_test=np.array(test_set['Class'])
 
 # =============================================================================
-# # Custom KNN without SKlearn Model
+# Custom KNN without SKlearn Model
 # =============================================================================
 
 class KNNClassifier():
@@ -140,7 +138,7 @@ print('Time taken for SK learn: ',time_taken)
 # custom model is better at accuracy and lagging for time taking
 
 # =============================================================================
-# # SMOTE MODEL for Balancing the data
+# SMOTE MODEL for Balancing the data
 # =============================================================================
 
 sm = SMOTE(random_state=2)
@@ -150,7 +148,7 @@ print("After OverSampling, counts of label '2': {}".format(sum(y_train_res==2)))
 print("After OverSampling, counts of label '4': {}".format(sum(y_train_res==4)))
 
 # =============================================================================
-# # Custom KNN after Sampling
+# Custom KNN after Sampling
 # =============================================================================
 
 def run():
