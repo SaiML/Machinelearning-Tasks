@@ -5,60 +5,36 @@ Created on Thu Sep  5 11:48:11 2019
 @author: Sainath.Reddy
 """
 
-# =============================================================================
-# importing Libraries
-# =============================================================================
-
 import pandas as pd 
 import numpy as np 
-from pandas import Series,DataFrame,concat
-from math import sqrt
 import matplotlib.pyplot as plt 
-import seaborn as sns
-from pandas.plotting import autocorrelation_plot,lag_plot
 from statsmodels.tsa.ar_model import AR
 from sklearn.metrics import mean_squared_error
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 from statsmodels.tsa.arima_model import ARIMA
 from statsmodels.tsa.api import SimpleExpSmoothing,ExponentialSmoothing
-from statsmodels.tsa.stattools import acf, pacf
+from statsmodels.tsa.stattools import acf, pacf,import adfuller
 from pmdarima.arima import auto_arima
+import statsmodels.api as sm
+from math import sqrt
 import warnings
 warnings.filterwarnings("ignore")
 
 
-# =============================================================================
-# Loading Data 
-# =============================================================================
-
-# BSE HDFC Bank ltd - 5 years Daily stock prices Dataset
-# Data has been taken from the link 
-#https://www.quandl.com/data/BSE/BOM500180-HDFC-Bank-Ltd-EOD-Prices
-
-df = pd.read_csv('BSE-BOM500180.csv', header=0)
-print('Data Frame head \n ',df.head(),'Data Frame shape \n',df.shape,
-      'Data Frame Dtypes \n',df.dtypes,'Data Frame Description \n', df.describe().transpose())
-
-# Hence Date is in Object conveting in to datetime format
-df['Date']=pd.to_datetime(df['Date'])
-df=df.set_index('Date')
-print('Date time indexed data',df.head())
-df1=df[['Close']]
+Data_stocks = pd.read_csv('BSE-BOM500180.csv', header=0)
+Data_stocks['Date']=pd.to_datetime(Data_stocks['Date'])
+Data_stocks=Data_stocks.set_index('Date')
+timeseries_df=Data_stocks[['Close']]
 
 # Hence it is daily data, but few stockprices values are missing for few Dates 
 # so , creating a index of continous dates and filling the missed values linearly, so that we can have all dates stock prices 
 
 idx = pd.date_range( '2014-08-27','2019-08-27')
-df2=df1.reindex(idx, fill_value=0)
-df2.replace(0,np.nan, inplace=True)
-dfnew=df2.interpolate(method='linear')
-print(dfnew.head())
+timeseries_df1=timeseries_df.reindex(idx, fill_value=0)
+timeseries_df1.replace(0,np.nan, inplace=True)
+timeseries_dfnew=timeseries_df1.interpolate(method='linear')
 
-# =============================================================================
 # Checking Data Stationary :
-# =============================================================================
-
-from statsmodels.tsa.stattools import adfuller
 def test_statinoray(timeseries):
     #Determinig Rolling Statistics
     rollingmean=timeseries.rolling(window=365).mean()
@@ -79,31 +55,18 @@ def test_statinoray(timeseries):
         dfoutput['critical value (%s)' %key] =value
     print(dfoutput)
 
-test_statinoray(dfnew)
-print('Data is not Stationary because rolling mean is not constant , and from  Dickey- Fuller Test P- Values is > 0.5') 
+test_statinoray(timeseries_dfnew)
 
-# =============================================================================
 # Checking Seasonality and Trend
-# =============================================================================
-import statsmodels.api as sm
-decomp= sm.tsa.seasonal_decompose(dfnew,freq=365)
+decomp= sm.tsa.seasonal_decompose(timeseries_dfnew,freq=365)
 decomp.plot()
-plt.show()
-print('We can observe the Trend is in upward direction and it has seasonality aswell')
 
-# =============================================================================
-# # Train and Test data Split and Functions for Plotting Graphs and Metrics
-# =============================================================================
 
-train=dfnew.loc['2014-08-27':'2019-02-26']
-test=dfnew.loc['2019-02-27':'2019-08-27']
+#  Train and Test data Split and Functions for Plotting Graphs and Metrics
+train=timeseries_dfnew.loc['2014-08-27':'2019-02-26']
+test=timeseries_dfnew.loc['2019-02-27':'2019-08-27']
 
 # Taking 6 months data as Testing data
-
-train.Close.plot(figsize=(15,8), title= 'Close price', fontsize=14)
-test.Close.plot(figsize=(15,8), title= 'Close price train and test data', fontsize=14)
-plt.show()
-
 def plltt(train_data,test_data,y_test,model):
     plt.figure(figsize=(16,8))
     plt.plot( train_data, label='Train')
@@ -130,11 +93,11 @@ def models(dfnew):
     
     # Linear regression
     time = [i+1 for i in range(len(dfnew))]
-    df1 = dfnew.copy()
-    df1['time'] = time
-    df1 = df1[['time', 'Close']]
-    train_data=df1.loc['2014-08-27':'2019-02-26']
-    test_data=df1.loc['2019-02-27':'2019-08-27']
+    df_linear = dfnew.copy()
+    df_linear['time'] = time
+    df_linear = df_linear[['time', 'Close']]
+    train_data=df_linear.loc['2014-08-27':'2019-02-26']
+    test_data=df_linear.loc['2019-02-27':'2019-08-27']
     x_train = train_data.drop('Close', axis=1)
     x_test = test_data.drop('Close', axis=1)
     y_train = train_data[['Close']]
@@ -219,46 +182,27 @@ def models(dfnew):
     resultsDf=resultsDf.reset_index(drop=True)
     print(resultsDf)
 
-models(dfnew)
+models(timeseries_dfnew)
 
-# =============================================================================
+
 # Checking Auto Correlation - converting data in to Stationary
-# =============================================================================
-
-def Autocorr(dfnew):
-    print(plot_acf(dfnew['Close'], lags=36))
-    plot_pacf(dfnew, ax=pyplot.gca(),lags=30)
+def Autocorr(timeseries_dfnew):
+    print(plot_acf(timeseries_dfnew['Close'], lags=36))
+    plot_pacf(timeseries_dfnew, ax=plt.gca(),lags=30)
     plt.figure(figsize=(16,8))
-    pd.plotting.autocorrelation_plot(dfnew['Close'])
-    pyplot.show()
+    pd.plotting.autocorrelation_plot(timeseries_dfnew['Close'])
+    plt.show()
 
-Autocorr(dfnew)
+Autocorr(timeseries_dfnew)
 
 # =============================================================================
 # Log tranforming Data to make data Stationary ( DE TRENDING and de seasonalising )
 # =============================================================================
 
-dfnew.head()
-dfnew['log']=np.log(dfnew['Close'])
-dfnew['Close_log_diff'] = dfnew['log'] - dfnew['log'].shift(1)
-dfnew['Close_log_diff'].dropna().plot()
+timeseries_dfnew['log']=np.log(timeseries_dfnew['Close'])
+timeseries_dfnew['Close_log_diff'] = timeseries_dfnew['log'] - timeseries_dfnew['log'].shift(1)
+timeseries_dfnew['Close_log_diff'].dropna().plot()
 plt.show()
-
-def test_stationarity(timeseries):
-    #Determing rolling statistics
-    rolmean = timeseries.rolling(window=365).mean()
-    rolstd = timeseries.rolling(window=365).std()
-
-    #Plot rolling statistics:
-    orig = plt.plot(timeseries, color='blue',label='Original')
-    mean = plt.plot(rolmean, color='red', label='Rolling Mean')
-    std = plt.plot(rolstd, color='black', label = 'Rolling Std')
-    plt.legend(loc='best')
-    plt.title('Rolling Mean & Standard Deviation')
-    plt.show(block=False)
-
-dfnew['Close_log_diff'].dropna(inplace=True)
-test_stationarity(dfnew['Close_log_diff'])
 
 def visualdecompeseddata(x):
    
@@ -272,19 +216,16 @@ def visualdecompeseddata(x):
     plt.plot(lag_pacf)
     plt.title('Autocorrelation Function')
     plt.figure(figsize=(16,8))
-    pd.plotting.autocorrelation_plot(dfnew['Close_log_diff'])
+    pd.plotting.autocorrelation_plot(timeseries_dfnew['Close_log_diff'])
     decomp= sm.tsa.seasonal_decompose(x,freq=365)
     decomp.plot()
-visualdecompeseddata(dfnew['Close_log_diff']) 
+timeseries_dfnew['Close_log_diff'].dropna(inplace=True)
+visualdecompeseddata(timeseries_dfnew['Close_log_diff']) 
 
-dfnew.dropna(inplace=True)
-dfnew.head()
-# =============================================================================
 # Autoregression (AR) Method
-# =============================================================================
-
-train=dfnew[['Close_log_diff']].loc['2014-08-27':'2019-02-26']
-test=dfnew[['Close_log_diff']].loc['2019-02-27':'2019-08-27']
+timeseries_dfnew.dropna(inplace=True)
+train=timeseries_dfnew[['Close_log_diff']].loc['2014-08-27':'2019-02-26']
+test=timeseries_dfnew[['Close_log_diff']].loc['2019-02-27':'2019-08-27']
 
 model = AR(train)
 model_fit = model.fit()
@@ -294,10 +235,8 @@ predictions = model_fit.predict(start=len(train), end=len(train)+len(test)-1, dy
 plltt(train['Close_log_diff'],test['Close_log_diff'],predictions,'Auto Regression model')
 newall(test['Close_log_diff'],predictions,'AR model')
 
-# =============================================================================
-# ARIMA
-# =============================================================================
 
+# ARIMA
 p=d=q=range(0,5)
 import itertools
 val = list(itertools.product(p,d,q))
@@ -319,34 +258,30 @@ plt.plot(results_ARIMA.fittedvalues, color='red')
 plt.show()
 print(results_ARIMA.summary())
 
-# =============================================================================
-# AUTO Arima
-# =============================================================================
 
-stepwise_model = auto_arima(dfnew['Close'], start_p=1, start_q=1,
+# AUTO Arima
+stepwise_model = auto_arima(timeseries_dfnew['Close'], start_p=1, start_q=1,
                            max_p=5, max_q=5, m=12,
                            start_P=0, seasonal=True,
                            d=1, D=1, trace=True,
                            error_action='ignore',  
                            suppress_warnings=True, 
                            stepwise=True)
-print(stepwise_model.aic())
 
 predictions = stepwise_model.predict(n_periods=30)
 future_dates = pd.date_range(start='28/08/2019', freq='D', periods=len(predictions))
 print(stepwise_model.summary())
 
-# =============================================================================
+
 # stock Predictions for next 30 Days
-# =============================================================================
 
 future_forecast = pd.DataFrame(predictions,index=future_dates)
 future_forecast.columns=['prediction']
 data = pd.DataFrame(predictions,index=future_dates)
 data.columns=['Close']
-dfh=dfnew['2019-01-01':'2019-08-27']
+dfh=timeseries_dfnew['2019-01-01':'2019-08-27']
 plt.figure(figsize=(15,7.5))
 plt.title("SARIMA forecast")
 plt.plot(dfh.Close)
 plt.plot(data,color = 'red')
-© 2019 GitHub, Inc.
+
